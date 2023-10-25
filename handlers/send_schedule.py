@@ -1,16 +1,8 @@
-import asyncio
-from datetime import date, timedelta
-
 from aiogram import types, Dispatcher
 import requests
-from bs4 import BeautifulSoup
 from buttons.dt_send_schedule import schedule_buttons
-from db.create_user import send_user_group
-from config import IP, PORT
-from fuzzywuzzy import fuzz, process
 import asyncio
-
-from сomponents.make_schedule import GroupSchedule, MakeSchedule
+from take_schedule_from_RKSI.make_schedule import GroupSchedule, MakeSchedule
 
 
 async def watch_schedule(call: types.CallbackQuery):

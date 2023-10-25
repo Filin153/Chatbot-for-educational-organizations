@@ -44,10 +44,15 @@ class MakeSchedule:
         yield split_symbol.join(all_day[:int(len(all_day) / 2)])
         yield split_symbol.join(all_day[int(len(all_day) / 2):])
 
+    def check_for_prepod(self):
+        if len(self.doc.group.split('.')) > 1:
+            temp = self.doc.group
+            self.doc.group = self.data['prepod']
+            self.data['prepod'] = temp
+
     def make_msg(self) -> ScheduleModel:
         SMILE_PAR = self.SMILE_PAR
         r_j = self.resp
-        group = self.doc.group
         today = self.doc.today
         tomorow = self.doc.tomorow
 
@@ -57,9 +62,11 @@ class MakeSchedule:
             for k in key:
                 msg_data.append(f"\n🗓Расписание на {str(r_j[k][0]['date'])}\n")
                 for i in r_j[k]:
+                    self.data = i
+                    self.check_for_prepod()
                     try:
                         msg_data.append(
-                            f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
+                            f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.doc.group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
                     except:
                         msg_data.append(
                             f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
@@ -71,9 +78,11 @@ class MakeSchedule:
             msg_data = ["🚨 <b>Расписание с сайта</b> 🚨\n\n"]
             msg_data.append(f"🗓Расписание на {str(r_j[0]['date'])}\n")
             for i in r_j:
+                self.data = i
+                self.check_for_prepod()
                 try:
                     msg_data.append(
-                        f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
+                        f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.doc.group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
                 except:
                     msg_data.append(
                         f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
@@ -126,7 +135,8 @@ if __name__ == '__main__':
     import asyncio
 
     async def main():
-        pt = await GroupSchedule(group="ИС-28", tomorow=True).run()
+        # pt = await PrepodSchedule(group="Бурда Е.Г.", tomorow=True).run()
+        pt = await GroupSchedule(group="ИС-28", today=True).run()
         print(pt.schedule)
         return pt
 
