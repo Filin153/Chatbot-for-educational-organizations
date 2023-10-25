@@ -10,9 +10,7 @@ bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-engine = create_engine(
-    f"sqlite:///sqlite3.db"
-)
+engine = create_engine('sqlite:///sqlite3.db')
 
 local_session = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 

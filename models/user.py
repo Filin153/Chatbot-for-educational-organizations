@@ -14,4 +14,6 @@ class User(Base):
     user_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     group = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     is_study = sqlalchemy.Column(sqlalchemy.BOOLEAN, default=1)
-    made_date = sqlalchemy.Column(sqlalchemy.DATE, default=datetime.datetime.now())
+    made_date = sqlalchemy.Column(
+        sqlalchemy.DATE, default=datetime.datetime.now()
+    )
