@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 async def take_group():
     all_group = []
 
-    r = requests.get('ttps://rksi.ru/mobile_schedule')
+    r = requests.get('https://rksi.ru/mobile_schedule')
     soup = BeautifulSoup(r.text, 'lxml')
 
     pr_tb_soup = soup.find('select', {'name': 'group'})
