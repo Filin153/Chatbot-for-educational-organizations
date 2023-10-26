@@ -12,6 +12,9 @@ if __name__ == '__main__':
     from aiogram import executor
     from handlers import dp
     from loader import Base, engine
+    from middlewares.album_files import AlbumMiddleware
+
+    dp.middleware.setup(AlbumMiddleware())
 
     Base.metadata.create_all(engine)
 

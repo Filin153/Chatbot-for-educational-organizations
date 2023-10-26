@@ -12,10 +12,14 @@ class Homework(Base):
     )
     group = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     name_lesson = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    text = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    files_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    text = sqlalchemy.Column(sqlalchemy.String, default='Нет текста')
+    photos_name = sqlalchemy.Column(
+        sqlalchemy.String, nullable=False, default='Нет фото'
+    )
+    documents_name = sqlalchemy.Column(
+        sqlalchemy.String, nullable=False, default='Нет файлов'
+    )
     teacher_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    next_lesson = sqlalchemy.Column(sqlalchemy.String)
     made_date = sqlalchemy.Column(
         sqlalchemy.DATE, default=datetime.datetime.now()
     )

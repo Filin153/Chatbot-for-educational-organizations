@@ -2,10 +2,10 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from keyboards.inlines import start_ikb
-from loader import dp, db
+from loader import db, dp
 from states import Register
 
-from models import Teacher, Student
+from models import Student, Teacher
 
 
 @dp.message_handler(text='/start')
@@ -38,6 +38,7 @@ async def exit_account(message: types.Message):
         db.delete(account)
         db.commit()
         await message.answer(
-            'Вы успешно вышли из аккаунта\n\n' 'Стартовое сообщение',
-            reply_markup=start_ikb,
+            'Вы успешно вышли из аккаунта',
+            reply_markup=types.ReplyKeyboardRemove(),
         )
+        await message.answer('Стартовое сообщение', reply_markup=start_ikb)

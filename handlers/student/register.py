@@ -1,8 +1,9 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
+from keyboards import start_kb
 from keyboards.inlines import cancel_ikb
-from loader import dp, db
+from loader import db, dp
 from models import Student, Teacher
 from scripts import take_group
 from states import Register
@@ -33,7 +34,9 @@ async def get_group(message: types.Message, state: FSMContext):
         student.group = group
         db.add(student)
         db.commit()
-        await message.answer(f'Привет {student.user_name}')
+        await message.answer(
+            f'Привет {student.user_name}', reply_markup=start_kb
+        )
         await state.finish()
     else:
         await message.answer(
