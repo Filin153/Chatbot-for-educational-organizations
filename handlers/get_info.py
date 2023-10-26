@@ -8,7 +8,7 @@ from scripts.help_to_handler import edit_or_answer, send_info
 @dp.message_handler(filters.Text(equals="Инфо"))
 async def info(message: types.Message):
     await message.delete()
-    await edit_or_answer(message, "Выберете:", where_butt)
+    await edit_or_answer(message, "📖Инфо", where_butt)
 
 @dp.callback_query_handler(text='priem_d')
 async def med(call: types.CallbackQuery):

@@ -8,4 +8,4 @@ from scripts.help_to_handler import edit_or_answer, send_info
 @dp.message_handler(filters.Text(equals="Документы"))
 async def docs(message: types.Message):
     await message.delete()
-    await edit_or_answer(message, "Выберете:", generate_docs_butt())
+    await edit_or_answer(message, "📑Документы", generate_docs_butt())
