@@ -4,7 +4,7 @@ from aiogram import types, filters
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from datetime import datetime
-from keyboards.inlines.start_ikb import start_ikb
+from keyboards.inlines.start_ikb import start_ikb, cancel_ikb
 from loader import dp
 from scripts import true_teacher
 from scripts.help_to_handler import (
@@ -105,9 +105,9 @@ async def send_schedule_tomorrow(call: types.CallbackQuery, state: FSMContext):
 async def name_prepod(call: types.CallbackQuery):
     await call.message.delete()
     if true_teacher(call.message.chat.id):
-        await call.message.answer('Отправьте группу')
+        await call.message.answer('Отправьте группу', reply_markup=cancel_ikb)
     else:
-        await call.message.answer('Отправьте ФИО преподавателя')
+        await call.message.answer('Отправьте ФИО преподавателя', reply_markup=cancel_ikb)
     await SendName.last_name.set()
 
 

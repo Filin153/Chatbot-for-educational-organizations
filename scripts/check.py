@@ -27,14 +27,15 @@ async def check_prepod(
                 group=account.group, today=today, tomorow=tomorow
             ).run()
             msg_schedule = chedule.schedule
+        return buttons, msg_schedule
     elif len(name.split('.')) > 1:
-        buttons = schedule_buttons_p
+        buttons = schedule_buttons_g
         chedule = await PrepodSchedule(
             group=name, today=today, tomorow=tomorow
         ).run()
         msg_schedule = chedule.schedule
     else:
-        buttons = schedule_buttons_g
+        buttons = schedule_buttons_p
         chedule = await GroupSchedule(
             group=name, today=today, tomorow=tomorow
         ).run()

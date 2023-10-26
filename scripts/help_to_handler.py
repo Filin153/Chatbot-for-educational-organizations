@@ -1,4 +1,5 @@
 from keyboards import where_butt
+from keyboards.inlines.start_ikb import cancel_ikb
 from loader import bot
 import asyncio
 from aiogram import types
@@ -44,12 +45,12 @@ async def take_g_or_p(res, message: types.Message):
         return True
     else:
         await message.answer(
-            f'Похожие варианты:\n{"".join(res)}', parse_mode='HTML'
+            f'Доступные варианты:\n{"".join(res)}', parse_mode='HTML'
         )
         if true_teacher(message.from_user.id):
-            await message.answer('Отправьте группу')
+            await message.answer('Отправьте группу', reply_markup=cancel_ikb)
         else:
-            await message.answer('Отправьте ФИО преподавателя')
+            await message.answer('Отправьте ФИО преподавателя', reply_markup=cancel_ikb)
 
 
 async def take(data, key, message: types.Message):
