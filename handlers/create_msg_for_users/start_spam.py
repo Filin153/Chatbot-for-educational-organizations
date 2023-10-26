@@ -46,9 +46,9 @@ async def spam_start(message: types.Message, state: FSMContext):
                 try:
                     await bot.send_message(chat_id=i.tg_user_id, text=data[f"msg_{message.from_user.id}"])
                 except:
-                    n += 1
+                    no += 1
             await message.answer("Рассылка закончена!")
-            await message.answer(f"Не получили сорбщение {n} пользователей!")
+            await message.answer(f"Не получили сорбщение {no} пользователей!")
         except:
             await state.finish()
             await message.answer("Что-то пошло не так :(")

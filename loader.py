@@ -12,7 +12,7 @@ storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 engine = create_engine(
-    f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 )
 
 local_session = sessionmaker(autoflush=False, autocommit=False, bind=engine)
