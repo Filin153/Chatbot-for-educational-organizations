@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 from data import config
+from data.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from aiogram import Bot, types, Dispatcher
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
@@ -11,7 +12,7 @@ storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 engine = create_engine(
-    f"sqlite:///sqlite3.db"
+    f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
 local_session = sessionmaker(autoflush=False, autocommit=False, bind=engine)

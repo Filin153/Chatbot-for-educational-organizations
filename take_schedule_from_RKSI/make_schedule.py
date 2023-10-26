@@ -38,6 +38,7 @@ class MakeSchedule:
         self.doc.today = today
         self.doc.tomorow = tomorow
 
+
     def share_msg(self, msg):
         split_symbol = self.SPLIT_SYMBOL
         all_day = msg.split(split_symbol)
@@ -47,7 +48,7 @@ class MakeSchedule:
     def check_for_prepod(self):
         if len(self.doc.group.split('.')) > 1:
             temp = self.doc.group
-            self.doc.group = self.data['prepod']
+            self.temp_group = self.data['prepod']
             self.data['prepod'] = temp
 
     def make_msg(self) -> ScheduleModel:
@@ -57,7 +58,7 @@ class MakeSchedule:
         tomorow = self.doc.tomorow
 
         if not tomorow and not today:
-            msg_data = ["🚨 <b>Расписание с сайта</b> 🚨\n\n"]
+            msg_data = []
             key = list(r_j.keys())
             for k in key:
                 msg_data.append(f"\n🗓Расписание на {str(r_j[k][0]['date'])}\n")
@@ -66,7 +67,7 @@ class MakeSchedule:
                     self.check_for_prepod()
                     try:
                         msg_data.append(
-                            f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.doc.group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
+                            f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
                     except:
                         msg_data.append(
                             f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
@@ -75,14 +76,14 @@ class MakeSchedule:
 
             self.doc.schedule = ''.join(msg_data)
         elif (date.today().strftime('%d.%m.20%y') == r_j[0]['date']) or (((date.today() + timedelta(days=1)).strftime('%d.%m.20%y')) == r_j[0]['date']):
-            msg_data = ["🚨 <b>Расписание с сайта</b> 🚨\n\n"]
+            msg_data = []
             msg_data.append(f"🗓Расписание на {str(r_j[0]['date'])}\n")
             for i in r_j:
                 self.data = i
                 self.check_for_prepod()
                 try:
                     msg_data.append(
-                        f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.doc.group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
+                        f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
                 except:
                     msg_data.append(
                         f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
@@ -135,8 +136,8 @@ if __name__ == '__main__':
     import asyncio
 
     async def main():
-        # pt = await PrepodSchedule(group="Бурда Е.Г.", tomorow=True).run()
-        pt = await GroupSchedule(group="ИС-28", today=True).run()
+        pt = await PrepodSchedule(group="Бурда Е.Г.", tomorow=True).run()
+        # pt = await GroupSchedule(group="ИС-28", today=True).run()
         print(pt.schedule)
         return pt
 
