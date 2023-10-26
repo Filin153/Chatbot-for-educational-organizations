@@ -1,10 +1,10 @@
 import requests
-from keyboards.dt_send_schedule import schedule_buttons_g, schedule_buttons_p
+from keyboards.bt_send_schedule import schedule_buttons_g, schedule_buttons_p
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz, process
 from loader import db
 from models import Teacher, Student
-from take_schedule_from_RKSI.make_schedule import GroupSchedule, PrepodSchedule, MakeSchedule
+from take_schedule_from_RKSI.make_schedule import GroupSchedule, PrepodSchedule
 
 async def check_prepod(id = None, name: str = None, today: bool = False, tomorow: bool = False):
     if id:

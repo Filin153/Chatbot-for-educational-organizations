@@ -1,16 +1,18 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton, ReplyKeyboardMarkup
 
 
-menu = InlineKeyboardMarkup()
-red_menu = InlineKeyboardMarkup()
+menu = ReplyKeyboardMarkup(resize_keyboard=True)
+# red_menu = InlineKeyboardMarkup()
 
 
-supports_b = InlineKeyboardButton('Тех.поддержка бота', callback_data='supports')
-open_map_b = InlineKeyboardButton('Открыть карту', callback_data='open_map')
-schedule = InlineKeyboardButton('Расписание', callback_data='schedule')
-spam = InlineKeyboardButton('Рассылка', callback_data='spam')
-who = InlineKeyboardButton('Кто где когда', callback_data='who')
+supports_b = KeyboardButton('Тех.поддержка бота')
+open_map_b = KeyboardButton('Открыть карту')
+schedule = KeyboardButton('Расписание')
+info = KeyboardButton("Инфо")
+doc = KeyboardButton("Документы")
+# spam = InlineKeyboardButton('Рассылка', callback_data='spam')
+who = InlineKeyboardButton('Кто где когда')
 
 
-menu.add(schedule).add(open_map_b).add(who).add(supports_b)
-red_menu.add(schedule).add(open_map_b).add(who).add(supports_b).add(spam)
+menu.add(schedule).add(info).add(doc)
+# red_menu.add(schedule).add(open_map_b).add(who).add(supports_b).add(spam)

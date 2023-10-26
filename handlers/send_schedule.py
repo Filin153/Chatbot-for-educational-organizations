@@ -1,23 +1,24 @@
-from keyboards.dt_send_schedule import schedule_buttons_g, schedule_buttons_p
+from keyboards.bt_send_schedule import schedule_buttons_g, schedule_buttons_p
 import asyncio
-from aiogram import types
+from aiogram import types, filters
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from loader import dp
-from keyboards.dt_send_schedule import day_key
+from keyboards.bt_send_schedule import day_key
 from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
+from scripts.help_to_handler import edit_or_answer
 from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
 class SendName(StatesGroup):
     last_name = State()
 
-@dp.callback_query_handler(text='schedule')
-async def watch_schedule(call: types.CallbackQuery):
-    if true_teacher(call.message.chat.id):
-        await call.message.edit_text('Выбирите день:', reply_markup=schedule_buttons_p, parse_mode="HTML")
+@dp.message_handler(filters.Text(equals="Расписание"))
+async def watch_schedule(message: types.Message):
+    await message.delete()
+    if true_teacher(message.from_user.id):
+        await edit_or_answer(message, "Выбирите день:", schedule_buttons_p)
     else:
-        await call.message.edit_text('Выбирите день:', reply_markup=schedule_buttons_g, parse_mode="HTML")
-
+        await edit_or_answer(message, "Выбирите день:", schedule_buttons_g)
 @dp.callback_query_handler(text='week')
 async def send_schedule_week(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:

@@ -3,3 +3,4 @@ __pycache__/
 base.db
 .env
 venv/
+test.py
