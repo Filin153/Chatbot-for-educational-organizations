@@ -10,9 +10,10 @@ open_map_b = KeyboardButton('Открыть карту')
 schedule = KeyboardButton('Расписание')
 info = KeyboardButton("Инфо")
 doc = KeyboardButton("Документы")
+spam = KeyboardButton("Рассылка")
 # spam = InlineKeyboardButton('Рассылка', callback_data='spam')
 who = InlineKeyboardButton('Кто где когда')
 
 
-menu.add(schedule).add(info).add(doc)
+menu.add(schedule).add(info).add(doc).add(spam)
 # red_menu.add(schedule).add(open_map_b).add(who).add(supports_b).add(spam)

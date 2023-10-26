@@ -42,3 +42,19 @@ async def valid_data(id, data = None, today: bool = False, tomorow: bool = False
     except:
         return await check_prepod(id=id, today=today, tomorow=tomorow)
 
+async def take_g_or_p(res, message: types.Message):
+    if not res:
+        await message.answer("Выберите день", reply_markup=day_key)
+        return True
+    else:
+        await message.answer(f'Похожие варианты:\n{"".join(res)}', parse_mode='HTML')
+        if true_teacher(message.from_user.id):
+            await message.answer('Отправьте группу')
+        else:
+            await message.answer('Отправьте фамилию преподавателя')
+
+async def take(data, key, message: types.Message):
+    if true_teacher(message.from_user.id):
+        return await take_all_group(data[key])
+    else:
+        return await take_all_prepod(data[key])

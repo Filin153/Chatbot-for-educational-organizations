@@ -47,6 +47,24 @@ def true_teacher(id):
     if account:
         return True
 
+# def true_moder(id): # Поменять таблицу
+#     account = (
+#         db.query(Teacher)
+#         .filter(Teacher.tg_user_id == id)
+#         .first()
+#     )
+#     if account:
+#         return True
+
+def take_all_stud(group):
+    account = (
+        db.query(Student)
+        .filter(Student.group == group)
+        .all()
+    )
+    if account:
+        return account
+
 
 async def take_all_prepod(name):
     all_prepod = []

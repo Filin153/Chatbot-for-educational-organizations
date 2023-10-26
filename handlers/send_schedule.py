@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from loader import dp
 from keyboards.bt_send_schedule import day_key
 from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
-from scripts.help_to_handler import edit_or_answer, valid_data
+from scripts.help_to_handler import edit_or_answer, valid_data, take_g_or_p, take
 from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
 class SendName(StatesGroup):
@@ -80,18 +80,8 @@ async def take_name(message: types.Message, state: FSMContext):
         else:
             data[f'name_{message.from_user.id}'] = message.text.upper()
 
-        if true_teacher(message.from_user.id):
-            res = await take_all_group(data[f'name_{message.from_user.id}'])
-        else:
-            res = await take_all_prepod(data[f'name_{message.from_user.id}'])
-        if not res:
+        res = await take(data, f'name_{message.from_user.id}', message)
+        if await take_g_or_p(res, message):
             await state.finish()
-            await message.answer("Выберите день", reply_markup=day_key)
-        else:
-            await message.answer(f'Похожие варианты:\n{"".join(res)}', parse_mode='HTML')
-            if true_teacher(message.from_user.id):
-                await message.answer('Отправьте группу')
-            else:
-                await message.answer('Отправьте фамилию преподавателя')
 
 
