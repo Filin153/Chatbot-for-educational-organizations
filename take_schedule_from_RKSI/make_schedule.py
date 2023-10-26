@@ -37,6 +37,7 @@ class MakeSchedule:
         self.doc.group = group
         self.doc.today = today
         self.doc.tomorow = tomorow
+        self.temp_group = None
 
 
     def share_msg(self, msg):
@@ -56,6 +57,7 @@ class MakeSchedule:
         r_j = self.resp
         today = self.doc.today
         tomorow = self.doc.tomorow
+        self.temp_group = self.doc.group
 
         if not tomorow and not today:
             msg_data = []
@@ -68,7 +70,8 @@ class MakeSchedule:
                     try:
                         msg_data.append(
                             f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
-                    except:
+                    except Exception as e:
+                        print(e)
                         msg_data.append(
                             f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
 
@@ -84,7 +87,8 @@ class MakeSchedule:
                 try:
                     msg_data.append(
                         f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n🚪Кабинет - {i['audit'].split('-')[0]}\n#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i['prepod']}\n📖Предмет:  {i['name']}\n")
-                except:
+                except Exception as e:
+                    print(e)
                     msg_data.append(
                         f"\n{SMILE_PAR[i['start']]}\n⏰Время: {i['start']} - {i['end']}\n📖Предмет:  {i['name']}\n")
 
@@ -136,8 +140,8 @@ if __name__ == '__main__':
     import asyncio
 
     async def main():
-        pt = await PrepodSchedule(group="Бурда Е.Г.", tomorow=True).run()
-        # pt = await GroupSchedule(group="ИС-28", today=True).run()
+        # pt = await PrepodSchedule(group="Бурда Е.Г.", today=True).run()
+        # pt = await GroupSchedule(group="ИС-27", today=True).run()
         print(pt.schedule)
         return pt
 

@@ -14,3 +14,6 @@ prepod_schedule_buttons = ReplyKeyboardMarkup(one_time_keyboard=True, resize_key
 group = InlineKeyboardButton('Расписание группы', callback_data='prepod')
 schedule_buttons_p.add(today, tomorrow).add(week).add(group)
 
+day_key = InlineKeyboardMarkup()
+day_key.add(today).add(tomorrow).add(week)
+

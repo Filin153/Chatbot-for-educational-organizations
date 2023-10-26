@@ -1,39 +1,106 @@
-from aiogram import types, Dispatcher
-import requests
-from loader import dp
-from utils.check import chech_prepod
 from keyboards.dt_send_schedule import schedule_buttons_g, schedule_buttons_p
 import asyncio
-from take_schedule_from_RKSI.make_schedule import GroupSchedule, PrepodSchedule, MakeSchedule
+from aiogram import types
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+from loader import dp
+from keyboards.dt_send_schedule import day_key
+from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
+from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
+class SendName(StatesGroup):
+    last_name = State()
 
 @dp.callback_query_handler(text='schedule')
 async def watch_schedule(call: types.CallbackQuery):
-    await call.message.edit_text('<b>Расписание берётся с планшетки, но если что-то пойдет не так то выдаст расписание с сайта об это будет уведомлениие в самом верху.</b>\n\nВыбирите день:', reply_markup=schedule_buttons_g, parse_mode="HTML")
+    if true_teacher(call.message.chat.id):
+        await call.message.edit_text('Выбирите день:', reply_markup=schedule_buttons_p, parse_mode="HTML")
+    else:
+        await call.message.edit_text('Выбирите день:', reply_markup=schedule_buttons_g, parse_mode="HTML")
 
 @dp.callback_query_handler(text='week')
-async def send_schedule_week(call: types.CallbackQuery):
-    buttons, msg_schedule = await chech_prepod(call)
-    try:
-        await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
-    except:
-        msg = MakeSchedule().share_msg(msg_schedule)
-        firstText = await call.message.edit_text(next(msg), parse_mode="HTML")
-        await call.message.answer(next(msg), reply_markup=buttons, parse_mode="HTML")
+async def send_schedule_week(call: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
         try:
-            delMsg = await firstText.reply('Удалится через 2 мин')
-            await asyncio.sleep(120)
-            await delMsg.delete()
-            await firstText.delete()
+            if not data[f'name_{call.message.chat.id}']:
+                buttons, msg_schedule = await check_prepod(call.message.chat.id)
+            else:
+                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'])
         except:
-            pass
+            buttons, msg_schedule = await check_prepod(call.message.chat.id)
+
+        try: del data[f'name_{call.message.chat.id}']
+        except: pass
+
+        try:
+            await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
+        except:
+            msg = MakeSchedule().share_msg(msg_schedule)
+            firstText = await call.message.edit_text(next(msg), parse_mode="HTML")
+            await call.message.answer(next(msg), reply_markup=buttons, parse_mode="HTML")
+            try:
+                delMsg = await firstText.reply('Удалится через 2 мин')
+                await asyncio.sleep(120)
+                await delMsg.delete()
+                await firstText.delete()
+            except:
+                pass
 
 @dp.callback_query_handler(text='today')
-async def send_schedule_today(call: types.CallbackQuery):
-    buttons, msg_schedule = await chech_prepod(call, today=True)
-    await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
+async def send_schedule_today(call: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        try:
+            if not data[f'name_{call.message.chat.id}']:
+                buttons, msg_schedule = await check_prepod(call.message.chat.id, today=True)
+            else:
+                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'], today=True)
+        except:
+            buttons, msg_schedule = await check_prepod(call.message.chat.id, today=True)
+
+        try: del data[f'name_{call.message.chat.id}']
+        except: pass
+
+        await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
 
 @dp.callback_query_handler(text='tomorrow')
-async def send_schedule_tomorrow(call: types.CallbackQuery):
-    buttons, msg_schedule = await chech_prepod(call, tomorow=True)
-    await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
+async def send_schedule_tomorrow(call: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        try:
+            if not data[f'name_{call.message.chat.id}']:
+                buttons, msg_schedule = await check_prepod(call.message.chat.id, tomorow=True)
+            else:
+                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'], tomorow=True)
+        except:
+            buttons, msg_schedule = await check_prepod(call.message.chat.id, tomorow=True)
+
+        try: del data[f'name_{call.message.chat.id}']
+        except: pass
+
+        await call.message.edit_text(str(msg_schedule), reply_markup=buttons, parse_mode="HTML")
+
+@dp.callback_query_handler(text='prepod')
+async def name_prepod(call: types.CallbackQuery):
+    await call.message.delete()
+    if true_teacher(call.message.chat.id):
+        await call.message.answer('Отправьте группу')
+    else:
+        await call.message.answer('Отправьте фамилию преподавателя')
+    await SendName.last_name.set()
+
+@dp.message_handler(state=SendName.last_name)
+async def take_name(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data[f'name_{message.from_user.id}'] = message.text
+
+        if true_teacher(message.from_user.id):
+            res = await take_all_group(data[f'name_{message.from_user.id}'])
+        else:
+            res = await take_all_prepod(data[f'name_{message.from_user.id}'])
+        if not res:
+            await state.finish()
+            await message.answer("Выберите день", reply_markup=day_key)
+        else:
+            await message.answer(f'Похожие варианты:\n{"".join(res)}', parse_mode='HTML')
+            await message.answer(f'Отправьте фамилию преподавателя:')
+
+
