@@ -9,7 +9,7 @@ from states import Register
 
 
 @dp.callback_query_handler(text='teacher')
-async def study_call(call: types.CallbackQuery):
+async def teacher_call(call: types.CallbackQuery):
     students_id = list(map(lambda x: x.tg_user_id, db.query(Student).all()))
     teachers_id = list(map(lambda x: x.tg_user_id, db.query(Teacher).all()))
     all_id = students_id + teachers_id
@@ -23,7 +23,7 @@ async def study_call(call: types.CallbackQuery):
 
 
 @dp.message_handler(content_types=['text'], state=Register.fio)
-async def get_group(message: types.Message, state: FSMContext):
+async def get_fio(message: types.Message, state: FSMContext):
     password = message.text
     teacher_data = (
         db.query(TeacherData).filter(TeacherData.password == password).first()
@@ -36,7 +36,11 @@ async def get_group(message: types.Message, state: FSMContext):
         db.add(teacher)
         db.commit()
         await message.answer(
-            f'Здравствуйте {teacher.full_name}', reply_markup=start_kb
+            f'Здравствуйте {teacher.full_name},'
+            f' Вы успешно вошли, теперь вы можете смотреть расписание,'
+            f' записывать домашнее задание для группы,'
+            f' получить интересующую вас информацию о колледже.\n(Теперь вы '
+            f'можете войти в учебный отдел)', reply_markup=start_kb
         )
         await state.finish()
     else:

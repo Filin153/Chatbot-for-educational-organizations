@@ -8,7 +8,8 @@ start_ikb = InlineKeyboardMarkup(
             InlineKeyboardButton(
                 text='Преподаватель', callback_data='teacher'
             ),
-        ]
+        ],
+        [InlineKeyboardButton(text='Учебный отдел', callback_data='training_departament')]
     ],
     resize_keyboard=True,
 )

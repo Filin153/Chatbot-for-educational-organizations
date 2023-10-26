@@ -1,7 +1,6 @@
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
-class Register(StatesGroup):
+class Spam(StatesGroup):
     group = State()
-    fio = State()
-    password_departament = State()
+    message = State()

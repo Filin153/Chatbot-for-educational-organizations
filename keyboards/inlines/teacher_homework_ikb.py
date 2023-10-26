@@ -77,3 +77,14 @@ async def create_check_groups_ikb(groups):
         InlineKeyboardButton(text='Отмена❌', callback_data='cancel_homework')
     )
     return groups_ikb
+
+
+async def create_check_date_ikb(dates, subject, group):
+    date_ikb = InlineKeyboardMarkup(row_width=1, resize_keyboard=True)
+    for date in dates:
+        date_ikb.add(
+            InlineKeyboardButton(
+                text=date, callback_data=f'd_{date}_{subject}_{group}'
+            )
+        )
+    return date_ikb

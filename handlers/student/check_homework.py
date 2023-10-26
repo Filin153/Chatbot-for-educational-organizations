@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.types import MediaGroup
 
+from keyboards.inlines import create_date_ikb
 from loader import db, dp
 from models import Homework, Student
 
@@ -14,12 +15,29 @@ async def check_homework_student(call: types.CallbackQuery):
         .group
     )
     subject = call.data.split('_')[1]
+    all_date = db.query(Homework).filter(Homework.group == student_group, Homework.name_lesson == subject).all()
+    dates = list(map(lambda x: str(x.made_date), set(all_date)))
+    dates_ikb = await create_date_ikb(set(dates), subject)
+    await call.message.edit_text('Выберите дату')
+    await call.message.edit_reply_markup(dates_ikb)
+
+
+@dp.callback_query_handler(lambda call: call.data.startswith('date_'))
+async def check_homework_student(call: types.CallbackQuery):
+    student_group = (
+        db.query(Student)
+        .filter(Student.tg_user_id == call.from_user.id)
+        .first()
+        .group
+    )
+    date = call.data.split('_')[1]
+    subject = call.data.split('_')[2]
     homework = (
         db.query(Homework)
         .filter(
-            Homework.group == student_group, Homework.name_lesson == subject
+            Homework.group == student_group, Homework.name_lesson == subject, Homework.made_date == date
         )
-        .first()
+        .all()[-1]
     )
     photos = homework.photos_name
     documents = homework.documents_name

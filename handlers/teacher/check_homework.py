@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import MediaGroup
 
-from keyboards.inlines import create_check_groups_ikb, create_check_lessons_ikb
+from keyboards.inlines import create_check_groups_ikb, create_check_lessons_ikb, create_check_date_ikb
 from loader import db, dp
 from models import Homework
 from scripts import get_lesson_dict
@@ -45,10 +45,24 @@ async def check_homework(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     subject = data['name_lesson']
     group = call.data.split('_')[1]
+    all_date = db.query(Homework).filter(Homework.group == group, Homework.name_lesson == subject).all()
+    dates = list(map(lambda x: str(x.made_date), set(all_date)))
+    dates_ikb = await create_check_date_ikb(set(dates), subject, group)
+    await call.message.edit_text('Выберите дату')
+    await call.message.edit_reply_markup(dates_ikb)
+    await state.finish()
+
+
+@dp.callback_query_handler(lambda call: call.data.startswith('d_'))
+async def check_homework_student(call: types.CallbackQuery):
+    data = call.data.split('_')
+    date = data[1]
+    subject = data[2]
+    group = data[3]
     homework = (
         db.query(Homework)
-        .filter(Homework.group == group, Homework.name_lesson == subject)
-        .first()
+        .filter(Homework.group == group, Homework.name_lesson == subject, Homework.made_date == date)
+        .all()[-1]
     )
     if homework is None:
         await call.message.answer('У группы нет домашних заданий')
@@ -64,7 +78,7 @@ async def check_homework(call: types.CallbackQuery, state: FSMContext):
                     album.attach_photo(
                         photo=files[i],
                         caption=f'Домашнее задание для группы {group}\n\n\n'
-                        f'Текст домашнего задания:\n\n{text}',
+                                f'Текст домашнего задания:\n\n{text}',
                     )
                 else:
                     album.attach_photo(photo=files[i])
@@ -77,7 +91,7 @@ async def check_homework(call: types.CallbackQuery, state: FSMContext):
                     album.attach_document(
                         document=files[i],
                         caption=f'Домашнее задание для группы {group}\n\n\n'
-                        f'Текст домашнего задания:\n\n{text}',
+                                f'Текст домашнего задания:\n\n{text}',
                     )
                 else:
                     album.attach_document(document=files[i])
@@ -85,5 +99,5 @@ async def check_homework(call: types.CallbackQuery, state: FSMContext):
         else:
             await call.message.answer(
                 text=f'Домашнее задание для группы {group}\n\n\n'
-                f'Текст домашнего задания:\n\n{text}'
+                     f'Текст домашнего задания:\n\n{text}'
             )

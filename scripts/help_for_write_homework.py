@@ -1,11 +1,12 @@
+import datetime
+
 from loader import bot, db
 from models import Homework, Student, Teacher
 from take_schedule_from_RKSI.main import prepod_pars
-import datetime
 
 
 async def help_write(
-    name: str, today: bool = False, tomorrow: bool = False
+        name: str, today: bool = False, tomorrow: bool = False
 ) -> dict:  # Если всё False то выводит за неделю
     newdict = {}
     result = await prepod_pars(name, today=today, tomorrow=tomorrow)
@@ -43,21 +44,6 @@ async def get_lesson_dict(call):
     return lesson_dict
 
 
-async def create_homework(group, subject, teacher_name):
-    homework = (
-        db.query(Homework)
-        .filter(Homework.name_lesson == subject, Homework.group == group)
-        .first()
-    )
-    if homework is None:
-        homework = Homework()
-        homework.group = group
-        homework.name_lesson = subject
-        homework.teacher_name = teacher_name
-        db.add(homework)
-        db.commit()
-
-
 async def update_homework(message, data, text, file_names):
     teacher_name = (
         db.query(Teacher)
@@ -66,12 +52,10 @@ async def update_homework(message, data, text, file_names):
         .full_name
     )
     subject, group = data['name_lesson'], data['group']
-    await create_homework(group, subject, teacher_name)
-    homework = (
-        db.query(Homework)
-        .filter(Homework.name_lesson == subject, Homework.group == group)
-        .first()
-    )
+    homework = Homework()
+    homework.group = group
+    homework.name_lesson = subject
+    homework.teacher_name = teacher_name
     homework.text = text
     if message.content_type == 'photo':
         homework.photos_name = file_names
@@ -83,6 +67,7 @@ async def update_homework(message, data, text, file_names):
         homework.photos_name = 'Нет фото'
         homework.documents_name = 'Нет файлов'
     homework.edit_date = datetime.datetime.now()
+    db.add(homework)
     db.commit()
     await notifications_user(group, subject)
     await message.answer('Домашнее задание успешно записано')
