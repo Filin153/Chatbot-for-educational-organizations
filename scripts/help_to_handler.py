@@ -8,6 +8,15 @@ import asyncio
 from scripts import msg_text
 from keyboards import where_butt, menu
 from loader import bot, dp
+from keyboards.bt_send_schedule import schedule_buttons_g, schedule_buttons_p
+import asyncio
+from aiogram import types, filters
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+from loader import dp
+from keyboards.bt_send_schedule import day_key
+from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
+from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
 timetodel = 10*60
 
@@ -23,3 +32,13 @@ async def send_info(call: types.CallbackQuery, text: str):
     await edit_or_answer(call.message, "Выберете:", where_butt)
     await asyncio.sleep(timetodel)
     await msg.delete()
+
+async def valid_data(id, data = None, today: bool = False, tomorow: bool = False):
+    try:
+        if not data[f'name_{id}']:
+            return await check_prepod(id=id, today=today, tomorow=tomorow)
+        else:
+            return await check_prepod(name=data[f'name_{id}'], today=today, tomorow=tomorow)
+    except:
+        return await check_prepod(id=id, today=today, tomorow=tomorow)
+

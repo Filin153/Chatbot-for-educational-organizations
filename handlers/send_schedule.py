@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from loader import dp
 from keyboards.bt_send_schedule import day_key
 from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
-from scripts.help_to_handler import edit_or_answer
+from scripts.help_to_handler import edit_or_answer, valid_data
 from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
 class SendName(StatesGroup):
@@ -14,21 +14,17 @@ class SendName(StatesGroup):
 
 @dp.message_handler(filters.Text(equals="Расписание"))
 async def watch_schedule(message: types.Message):
+    _, msg_schedule = await valid_data(id=message.from_user.id, today=True)
+
     await message.delete()
     if true_teacher(message.from_user.id):
-        await edit_or_answer(message, "Выбирите день:", schedule_buttons_p)
+        await edit_or_answer(message, msg_schedule, schedule_buttons_p)
     else:
-        await edit_or_answer(message, "Выбирите день:", schedule_buttons_g)
+        await edit_or_answer(message, msg_schedule, schedule_buttons_g)
 @dp.callback_query_handler(text='week')
 async def send_schedule_week(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        try:
-            if not data[f'name_{call.message.chat.id}']:
-                buttons, msg_schedule = await check_prepod(call.message.chat.id)
-            else:
-                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'])
-        except:
-            buttons, msg_schedule = await check_prepod(call.message.chat.id)
+        buttons, msg_schedule = await valid_data(data=data, id=call.message.chat.id)
 
         try: del data[f'name_{call.message.chat.id}']
         except: pass
@@ -50,13 +46,7 @@ async def send_schedule_week(call: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text='today')
 async def send_schedule_today(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        try:
-            if not data[f'name_{call.message.chat.id}']:
-                buttons, msg_schedule = await check_prepod(call.message.chat.id, today=True)
-            else:
-                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'], today=True)
-        except:
-            buttons, msg_schedule = await check_prepod(call.message.chat.id, today=True)
+        buttons, msg_schedule = await valid_data(data=data, id=call.message.chat.id, today=True)
 
         try: del data[f'name_{call.message.chat.id}']
         except: pass
@@ -66,13 +56,7 @@ async def send_schedule_today(call: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text='tomorrow')
 async def send_schedule_tomorrow(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        try:
-            if not data[f'name_{call.message.chat.id}']:
-                buttons, msg_schedule = await check_prepod(call.message.chat.id, tomorow=True)
-            else:
-                buttons, msg_schedule = await check_prepod(name=data[f'name_{call.message.chat.id}'], tomorow=True)
-        except:
-            buttons, msg_schedule = await check_prepod(call.message.chat.id, tomorow=True)
+        buttons, msg_schedule = await valid_data(data=data, id=call.message.chat.id, tomorow=True)
 
         try: del data[f'name_{call.message.chat.id}']
         except: pass
@@ -91,7 +75,10 @@ async def name_prepod(call: types.CallbackQuery):
 @dp.message_handler(state=SendName.last_name)
 async def take_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data[f'name_{message.from_user.id}'] = message.text
+        if len(message.text.split(".")) > 1:
+            data[f'name_{message.from_user.id}'] = message.text
+        else:
+            data[f'name_{message.from_user.id}'] = message.text.upper()
 
         if true_teacher(message.from_user.id):
             res = await take_all_group(data[f'name_{message.from_user.id}'])
@@ -102,6 +89,9 @@ async def take_name(message: types.Message, state: FSMContext):
             await message.answer("Выберите день", reply_markup=day_key)
         else:
             await message.answer(f'Похожие варианты:\n{"".join(res)}', parse_mode='HTML')
-            await message.answer(f'Отправьте фамилию преподавателя:')
+            if true_teacher(message.from_user.id):
+                await message.answer('Отправьте группу')
+            else:
+                await message.answer('Отправьте фамилию преподавателя')
 
 
