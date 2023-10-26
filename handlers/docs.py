@@ -1,11 +1,10 @@
 from aiogram import types, filters
-import asyncio
-from scripts import msg_text
 from keyboards.bt_docs import generate_docs_butt
-from loader import bot, dp
-from scripts.help_to_handler import edit_or_answer, send_info
+from loader import dp
+from scripts.help_to_handler import edit_or_answer
 
-@dp.message_handler(filters.Text(equals="Документы"))
+
+@dp.message_handler(filters.Text(equals='Документы'))
 async def docs(message: types.Message):
     await message.delete()
-    await edit_or_answer(message, "📑Документы", generate_docs_butt())
+    await edit_or_answer(message, '📑Документы', generate_docs_butt())

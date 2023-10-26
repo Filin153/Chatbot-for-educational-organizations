@@ -4,9 +4,7 @@ from .base_parser import BaseScheduleParser
 
 
 class ScheduleParsingController:
-    def __init__(self,
-                 parser: BaseScheduleParser):
-
+    def __init__(self, parser: BaseScheduleParser):
         self.parser = parser
 
     async def run(self):

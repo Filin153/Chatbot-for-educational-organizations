@@ -10,6 +10,6 @@ application-import-names = lyceum
 
 import-order-style = google
 
-inline-quotes = '
+inline-quotes = "
 
 ignore = I100, I202, W503, I001, I005, I004, I201, I003, F811, I101

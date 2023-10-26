@@ -1,5 +1,3 @@
-from enum import Enum
-
 from datetime import date, datetime, time
 
 from dataclasses import dataclass
@@ -13,21 +11,21 @@ class ThemeSource:
 
 
 class SourcesReference(BaseModel):
-    """SourcesReference model
+    '''SourcesReference model
 
     Contains accepted contacts
 
-    """
+    '''
 
     data: str
 
 
 class SubjectEntry(BaseModel):
-    """SubjectEntry model
+    '''SubjectEntry model
 
     SubjectEntry
 
-    """
+    '''
 
     startsAt: datetime
     endsAt: datetime

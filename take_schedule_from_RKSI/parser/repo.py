@@ -1,4 +1,4 @@
-from .models import Group, SubjectEntry, RawSubjectEntry
+from .models import Group, RawSubjectEntry
 
 
 class ScheduleRepo:

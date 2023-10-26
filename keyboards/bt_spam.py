@@ -8,4 +8,3 @@ tomorrow = InlineKeyboardButton('Преподаватель', callback_data='pre
 week = InlineKeyboardButton('Личное', callback_data='int_spam')
 prepod = InlineKeyboardButton('Всем', callback_data='all_spam')
 spam_butt.add(today, tomorrow).add(week).add(prepod)
-
