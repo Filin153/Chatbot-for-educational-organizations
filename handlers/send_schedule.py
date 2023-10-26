@@ -22,7 +22,7 @@ class SendName(StatesGroup):
 
 @dp.message_handler(filters.Text(equals='Расписание'))
 async def watch_schedule(message: types.Message):
-    if 20 <= datetime.now().time().hour > 0:
+    if 20 <= datetime.now().time().hour:
         _, msg_schedule = await valid_data(id=message.from_user.id, tomorow=True)
     else:
         _, msg_schedule = await valid_data(id=message.from_user.id, today=True)
