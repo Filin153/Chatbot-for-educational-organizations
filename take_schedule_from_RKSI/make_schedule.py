@@ -46,7 +46,7 @@ class MakeSchedule:
         split_symbol = self.SPLIT_SYMBOL
         all_day = msg.split(split_symbol)
         yield split_symbol.join(all_day[: int(len(all_day) / 2)])
-        yield split_symbol.join(all_day[int(len(all_day) / 2):])
+        yield (split_symbol.join(all_day[int(len(all_day) / 2) :]))
 
     def check_for_prepod(self):
         if len(self.doc.group.split('.')) > 1:
