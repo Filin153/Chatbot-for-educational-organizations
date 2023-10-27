@@ -18,7 +18,6 @@ from scripts.help_to_handler import (
 from take_schedule_from_RKSI.make_schedule import MakeSchedule
 
 
-
 class SendName(StatesGroup):
     last_name = State()
 
@@ -31,7 +30,9 @@ async def watch_schedule(message: types.Message):
                 id=message.from_user.id, tomorow=True
             )
         else:
-            _, msg_schedule = await valid_data(id=message.from_user.id, today=True)
+            _, msg_schedule = await valid_data(
+                id=message.from_user.id, today=True
+            )
     except Exception:
         pass
 
@@ -90,15 +91,11 @@ async def send_schedule_today(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         try:
             buttons, msg_schedule = await valid_data(
-                data=data, admin_key=key,
-                id=call.message.chat.id,
-                today=True
+                data=data, admin_key=key, id=call.message.chat.id, today=True
             )
         except Exception:
             buttons, msg_schedule = await valid_data(
-                data=data,
-                id=call.message.chat.id,
-                today=True
+                data=data, id=call.message.chat.id, today=True
             )
 
         try:
@@ -116,15 +113,11 @@ async def send_schedule_tomorrow(call: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         try:
             buttons, msg_schedule = await valid_data(
-                data=data, admin_key=key,
-                id=call.message.chat.id,
-                tomorow=True
+                data=data, admin_key=key, id=call.message.chat.id, tomorow=True
             )
         except Exception:
             buttons, msg_schedule = await valid_data(
-                data=data,
-                id=call.message.chat.id,
-                tomorow=True
+                data=data, id=call.message.chat.id, tomorow=True
             )
 
         try:
@@ -172,8 +165,8 @@ async def take_name(message: types.Message, state: FSMContext):
             data[f'name_{message.from_user.id}'] = message.text.upper()
             if re.sub(r'[\D]', '', data[f'name_{message.from_user.id}'][-2:]):
                 data[f'name_{message.from_user.id}'] = (
-                        data[f'name_{message.from_user.id}'][:-1]
-                        + data[f'name_{message.from_user.id}'][-1].lower()
+                    data[f'name_{message.from_user.id}'][:-1]
+                    + data[f'name_{message.from_user.id}'][-1].lower()
                 )
 
         try:

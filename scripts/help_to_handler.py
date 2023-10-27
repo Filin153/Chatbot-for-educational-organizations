@@ -6,7 +6,6 @@ from aiogram import types
 from keyboards.bt_send_schedule import day_key
 from scripts import check_prepod, take_all_prepod, true_teacher, take_all_group
 
-
 timetodel = 10 * 60
 
 

@@ -23,12 +23,12 @@ async def start(message: types.Message):
             reply_markup=admin_kb,
         )
     elif not true_teacher(message.from_user.id) and not true_stud(
-            message.from_user.id
+        message.from_user.id
     ):
         await message.answer_document(
             caption='Чтобы продолжить необходимо'
-                    ' подтвердить согласие на '
-                    'обработку персональных данных',
+            ' подтвердить согласие на '
+            'обработку персональных данных',
             document=types.InputFile('start_file/FV_BIT_CONF.docx'),
             reply_markup=accept_ikb,
         )
@@ -66,8 +66,8 @@ async def accept(call: types.CallbackQuery, state: FSMContext):
 async def reg_accept(call: types.CallbackQuery):
     await call.message.answer_document(
         caption='Чтобы продолжить необходимо'
-                ' подтвердить согласие на '
-                'обработку персональных данных',
+        ' подтвердить согласие на '
+        'обработку персональных данных',
         document=types.InputFile('start_file/FV_BIT_CONF.docx'),
         reply_markup=accept_ikb,
     )
