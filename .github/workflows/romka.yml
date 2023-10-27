@@ -3,10 +3,10 @@ name: CI/CD
 on:
   push:
     branches:
-      - romka
+      - main
   pull_request:
     branches:
-      - romka
+      - main
 
 jobs:
   flake8:

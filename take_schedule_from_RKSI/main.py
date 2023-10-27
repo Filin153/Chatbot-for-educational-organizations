@@ -1,6 +1,5 @@
 import asyncio
 from datetime import date, timedelta
-
 from take_schedule_from_RKSI.parser.rksi import RKSIScheduleParser
 
 

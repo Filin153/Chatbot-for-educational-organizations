@@ -77,6 +77,10 @@ async def notifications_user(group, subject):
     users = db.query(Student).filter(Student.group == group).all()
     for user in users:
         tg_id = user.tg_user_id
-        await bot.send_message(
-            tg_id, text=f'У вас новое домашнее задание по предмету {subject}'
-        )
+        try:
+            await bot.send_message(
+                tg_id,
+                text=f'У вас новое домашнее задание по предмету {subject}',
+            )
+        except Exception:
+            pass

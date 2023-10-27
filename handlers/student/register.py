@@ -1,11 +1,11 @@
+import re
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-
 from keyboards import start_kb
 from keyboards.inlines import cancel_ikb
 from loader import db, dp
 from models import Student, Teacher
-from scripts import take_group
+from scripts import take_all_group
 from states import Register
 
 
@@ -25,9 +25,11 @@ async def study_call(call: types.CallbackQuery):
 
 @dp.message_handler(content_types=['text'], state=Register.group)
 async def get_group(message: types.Message, state: FSMContext):
-    group = message.text
-    groups = await take_group()
-    if group in groups:
+    group = message.text.upper()
+    if re.sub(r'[\D]', '', group[-2:]):
+        group = group[:-1] + group[-1].lower()
+    res = await take_all_group(group)
+    if not res:
         student = Student()
         student.tg_user_id = message.from_user.id
         student.user_name = message.from_user.full_name
@@ -46,7 +48,7 @@ async def get_group(message: types.Message, state: FSMContext):
         await state.finish()
     else:
         await message.answer(
-            'Такой группы не существует, повторите попытку'
-            '\n\nНапример: БД-21',
+            'Такой группы не существует, повторите попытку\n'
+            f'Доступные:\n{"".join(res)}',
             reply_markup=cancel_ikb,
         )

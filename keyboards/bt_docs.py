@@ -1,12 +1,15 @@
+import os
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-docs_butt = InlineKeyboardMarkup()
 
-norm_act = InlineKeyboardButton(
-    'Нормативные акты', url='https://www.rksi.ru/locals#teacher'
-)
-zapis = InlineKeyboardButton(
-    'Пример отправки файла', callback_data='send_file:1.pdf'
-)
-
-docs_butt.add(norm_act).add(zapis)
+def generate_docs_butt():
+    docs_butt = InlineKeyboardMarkup()
+    all_file = os.listdir('file')
+    for i in all_file:
+        docs_butt.add(
+            InlineKeyboardButton(
+                f'{i.split(".")[0]}',
+                callback_data=f'send_file:{all_file.index(i)}',
+            )
+        )
+    return docs_butt

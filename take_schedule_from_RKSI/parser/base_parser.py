@@ -5,7 +5,7 @@ class ParsingError(Exception):
     pass
 
 
-class BadResponseError(ParsingError):
+class BadResponse(ParsingError):
     ...
 
 

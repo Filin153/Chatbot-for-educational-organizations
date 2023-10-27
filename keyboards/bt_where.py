@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 where_butt = InlineKeyboardMarkup()
 
@@ -9,8 +9,13 @@ eat_room_b = InlineKeyboardButton('Столовая', callback_data='eat')
 actov_zal = InlineKeyboardButton('Актовый зал', callback_data='act')
 activ_rksi = InlineKeyboardButton('Актив РКСИ', callback_data='activ')
 sport_zal = InlineKeyboardButton('Спортзал', callback_data='sport')
+priem_d = InlineKeyboardButton('Приемная директора', callback_data='priem_d')
+priem_kam = InlineKeyboardButton('Приемная камисия', callback_data='priem_kam')
 ycheb_otdel = InlineKeyboardButton('Учебный отдел', callback_data='ycheb')
+local_norm = InlineKeyboardButton(
+    'Локально нормативные акты', url='https://www.rksi.ru/locals#teacher'
+)
 
-where_butt.add(tualet_b, med_b, eat_room_b).add(
-    actov_zal, activ_rksi, sport_zal
-).add(ycheb_otdel)
+where_butt.add(priem_d, priem_kam).add(activ_rksi, ycheb_otdel).add(
+    med_b, local_norm
+).add(actov_zal, eat_room_b).add(tualet_b, sport_zal)

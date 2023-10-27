@@ -1,7 +1,5 @@
-from datetime import date, timedelta
-
 from pydantic import BaseModel
-
+from datetime import date, timedelta
 from take_schedule_from_RKSI.main import group_pars, prepod_pars
 
 
@@ -15,7 +13,7 @@ class ScheduleModel(BaseModel):
 
 class MakeSchedule:
     SPLIT_SYMBOL = '--------------------------------------------------'
-    smile_par = {
+    spile_par = {
         '08:00': '1️⃣',
         '09:40': '2️⃣',
         '11:30': '3️⃣',
@@ -48,7 +46,7 @@ class MakeSchedule:
         split_symbol = self.SPLIT_SYMBOL
         all_day = msg.split(split_symbol)
         yield split_symbol.join(all_day[: int(len(all_day) / 2)])
-        yield split_symbol.join(all_day[int(len(all_day) / 2)])
+        yield split_symbol.join(all_day[int(len(all_day) / 2):])
 
     def check_for_prepod(self):
         if len(self.doc.group.split('.')) > 1:
@@ -57,7 +55,7 @@ class MakeSchedule:
             self.data['prepod'] = temp
 
     def make_msg(self) -> ScheduleModel:
-        smile_par = self.smile_par
+        spile_par = self.spile_par
         r_j = self.resp
         today = self.doc.today
         tomorow = self.doc.tomorow
@@ -73,20 +71,13 @@ class MakeSchedule:
                     self.check_for_prepod()
                     try:
                         msg_data.append(
-                            f'\n{smile_par[i["start"]]}\n⏰Время: '
-                            f'{i["start"]} - '
-                            f'{i["end"]}\n🚪Кабинет - '
-                            f'{i["audit"].split("-")[0]}\n#️⃣Группа: '
-                            f'{self.temp_group}\n👨‍💻Преподователь: '
-                            f'{i["prepod"]}\n📖Предмет:  '
-                            f'{i["name"]}\n'
+                            f'\n{spile_par[i["start"]]}\n⏰Время: {i["start"]} - {i["end"]}\n🚪Кабинет - {i["audit"].split("-")[0]}\n'
+                            f'#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i["prepod"]}\n📖Предмет:  {i["name"]}\n'
                         )
                     except Exception as e:
                         print(e)
                         msg_data.append(
-                            f'\n{smile_par[i["start"]]}'
-                            f'\n⏰Время: {i["start"]} - '
-                            f'{i["end"]}\n📖Предмет:  {i["name"]}\n'
+                            f'\n{spile_par[i["start"]]}\n⏰Время: {i["start"]} - {i["end"]}\n📖Предмет:  {i["name"]}\n'
                         )
 
                 msg_data.append('-' * 50)
@@ -97,24 +88,19 @@ class MakeSchedule:
             == r_j[0]['date']
         ):
             msg_data = []
-            msg_data.append(f"🗓Расписание на {str(r_j[0]['date'])}\n")
+            msg_data.append(f'🗓Расписание на {str(r_j[0]["date"])}\n')
             for i in r_j:
                 self.data = i
                 self.check_for_prepod()
                 try:
                     msg_data.append(
-                        f'\n{smile_par[i["start"]]}\n⏰Время:'
-                        f' {i["start"]} - {i["end"]}\n🚪Кабинет - '
-                        f'{i["audit"].split("-")[0]}\n#️⃣Группа: '
-                        f'{self.temp_group}\n👨‍💻Преподователь: '
-                        f'{i["prepod"]}\n📖Предмет:  {i["name"]}\n'
+                        f'\n{spile_par[i["start"]]}\n⏰Время: {i["start"]} - {i["end"]}\n🚪Кабинет - {i["audit"].split("-")[0]}\n'
+                        f'#️⃣Группа: {self.temp_group}\n👨‍💻Преподователь: {i["prepod"]}\n📖Предмет:  {i["name"]}\n'
                     )
                 except Exception as e:
                     print(e)
                     msg_data.append(
-                        f'\n{smile_par[i["start"]]}\n⏰Время: '
-                        f'{i["start"]} - '
-                        f'{i["end"]}\n📖Предмет:  {i["name"]}\n'
+                        f'\n{spile_par[i["start"]]}\n⏰Время: {i["start"]} - {i["end"]}\n📖Предмет:  {i["name"]}\n'
                     )
 
             self.doc.schedule = ''.join(msg_data)
@@ -161,3 +147,16 @@ class PrepodSchedule(MakeSchedule):
         assert resp, '🥲Расписания нету'
         self.resp = resp
         return self.resp
+
+
+if __name__ == '__main__':
+    import asyncio
+
+    async def main():
+        pt = await PrepodSchedule(group='Бурда Е.Г.', today=True).run()
+        # pt = await GroupSchedule(group='ИС-27', today=True).run()
+        print(pt.schedule)
+        return pt
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())

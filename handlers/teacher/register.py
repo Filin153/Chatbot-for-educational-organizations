@@ -15,6 +15,7 @@ async def teacher_call(call: types.CallbackQuery):
     all_id = students_id + teachers_id
     if call.from_user.id in all_id:
         await call.answer('Вы уже вошли в аккаунт')
+        await call.message.answer('Меню', reply_markup=start_kb)
     else:
         await call.message.answer(
             'Введите пароль выданный администрацией', reply_markup=cancel_ikb

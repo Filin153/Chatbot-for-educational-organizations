@@ -1,24 +1,23 @@
-from aiogram import filters, types
-
+from aiogram import types, filters
+from scripts import msg_text
 from keyboards import where_butt
 from loader import dp
-from scripts import msg_text
 from scripts.help_to_handler import edit_or_answer, send_info
 
 
 @dp.message_handler(filters.Text(equals='Инфо'))
 async def info(message: types.Message):
     await message.delete()
-    await edit_or_answer(message, 'Выберете:', where_butt)
+    await edit_or_answer(message, '📖Инфо', where_butt)
 
 
 @dp.callback_query_handler(text='priem_d')
-async def med(call: types.CallbackQuery):
+async def priem_d(call: types.CallbackQuery):
     await send_info(call, msg_text.PRIEM_D)
 
 
 @dp.callback_query_handler(text='priem_kam')
-async def kam(call: types.CallbackQuery):
+async def priem_kam(call: types.CallbackQuery):
     await send_info(call, msg_text.PRIEM_KAM)
 
 
@@ -28,7 +27,7 @@ async def tualet(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(text='med')
-async def med_punkt(call: types.CallbackQuery):
+async def med(call: types.CallbackQuery):
     await send_info(call, msg_text.MED)
 
 

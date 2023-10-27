@@ -1,16 +1,19 @@
 import copy
 import urllib.parse
+from typing import Iterable, Any
 from dataclasses import dataclass
+
 from datetime import datetime
-from typing import Any, Iterable
+
+from rutimeparser import parse as ru2date
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ServerTimeoutError
-from bs4 import BeautifulSoup
-from bs4.element import PageElement, Tag
-from rutimeparser import parse as ru2date
 
-from .base_parser import BadResponseError, BaseScheduleParser
+from bs4 import BeautifulSoup
+from bs4.element import Tag, PageElement
+
+from .base_parser import BaseScheduleParser, BadResponse
 from .models import RawSubjectEntry
 
 
@@ -59,10 +62,9 @@ class ThemesFromPageElements:
             elif token.type == TokenType.END_OF_THEME:
                 yield current
             else:
-                raise KeyError(f"Can't handle token {token!r}")
+                raise KeyError(f'Can`t handle token {token!r}')
 
-    # TODO: represent following tokenizing logic as data, because
-    #  this algorithm can change many times
+    # TODO: represent following tokenizing logic as data, because this algorithm can change many times
 
     def tokens_generator(self):
         for i in self._elements:
@@ -124,16 +126,13 @@ class RKSIScheduleParser(BaseScheduleParser):
     ) -> list[RawSubjectEntry]:
         async with ClientSession() as session:
             headers = {
-                'Accept': 'text/html,application/xhtml+xml,'
-                'application/xml;q=0.9,*/*;q=0.8',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Origin': 'https://rksi.ru',
                 # 'Content-Length': '50',
                 'Accept-Language': 'ru',
-                'User-Agent': 'Mozilla/5.0 '
-                '(Macintosh; Intel Mac OS X 10_15_7) '
-                'AppleWebKit/605.1.15 (KHTML, like Gecko) '
-                'Version/15.4 Safari/605.1.15',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15',
                 'Referer': 'https://rksi.ru/mobile_schedule',
                 # 'Accept-Encoding': 'gzip, deflate, br',
                 'Connection': 'keep-alive',
@@ -147,7 +146,7 @@ class RKSIScheduleParser(BaseScheduleParser):
             )
 
             if r.status // 100 != 2:
-                raise BadResponseError()
+                raise BadResponse()
 
             html = await r.text()
             soup = BeautifulSoup(html, 'lxml')
@@ -163,16 +162,13 @@ class RKSIScheduleParser(BaseScheduleParser):
     ) -> list[RawSubjectEntry]:
         async with ClientSession() as session:
             headers = {
-                'Accept': 'text/html,application/xhtml+xml,'
-                'application/xml;q=0.9,*/*;q=0.8',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Origin': 'https://rksi.ru',
                 # 'Content-Length': '50',
                 'Accept-Language': 'ru',
-                'User-Agent': 'Mozilla/5.0 (Macintosh; '
-                'Intel Mac OS X 10_15_7) '
-                'AppleWebKit/605.1.15 (KHTML, like Gecko) '
-                'Version/15.4 Safari/605.1.15',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15',
                 'Referer': 'https://rksi.ru/mobile_schedule',
                 # 'Accept-Encoding': 'gzip, deflate, br',
                 'Connection': 'keep-alive',
@@ -188,7 +184,7 @@ class RKSIScheduleParser(BaseScheduleParser):
             )
 
             if r.status // 100 != 2:
-                raise BadResponseError()
+                raise BadResponse()
 
             html = await r.text()
             soup = BeautifulSoup(html, 'lxml')

@@ -1,8 +1,9 @@
-from dataclasses import dataclass
 from datetime import date, datetime, time
 
-from beanie import Document
+from dataclasses import dataclass
+
 from pydantic import BaseModel, Field
+from beanie import Document
 
 
 class ThemeSource:
@@ -26,18 +27,18 @@ class SubjectEntry(BaseModel):
 
     """
 
-    startsat: datetime
-    endsat: datetime
+    startsAt: datetime
+    endsAt: datetime
     name: str
 
-    removedat: datetime
+    removedAt: datetime
 
 
 class Group(Document):
     name: str
     schedule: list[SubjectEntry]
-    lastupdate: datetime = Field(default_factory=datetime.now)
-    removedat: datetime = None
+    lastUpdate: datetime = Field(default_factory=datetime.now)
+    removedAt: datetime = None
 
 
 @dataclass

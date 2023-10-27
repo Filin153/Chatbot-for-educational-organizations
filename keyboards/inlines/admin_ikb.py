@@ -17,6 +17,21 @@ do_teacher_ikb = InlineKeyboardMarkup(
     resize_keyboard=True,
 )
 
+admin_schedule_ikb = InlineKeyboardMarkup(
+    row_width=2,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                'Расписание преподавателя', callback_data='prepod:p'
+            ),
+            InlineKeyboardButton(
+                'Расписание группы', callback_data='prepod:g'
+            ),
+        ]
+    ],
+    resize_keyboard=True,
+)
+
 cancel_teacher_ikb = InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
