@@ -9,7 +9,11 @@ start_ikb = InlineKeyboardMarkup(
                 text='Преподаватель', callback_data='teacher'
             ),
         ],
-        [InlineKeyboardButton(text='Учебный отдел', callback_data='training_departament')]
+        [
+            InlineKeyboardButton(
+                text='Учебный отдел', callback_data='training_departament'
+            )
+        ],
     ],
     resize_keyboard=True,
 )
@@ -18,6 +22,17 @@ cancel_ikb = InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
         [InlineKeyboardButton(text='Отмена❌', callback_data='cancel')]
+    ],
+    resize_keyboard=True,
+)
+
+accept_ikb = InlineKeyboardMarkup(
+    row_width=1,
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='Да✅', callback_data='accept'),
+            InlineKeyboardButton(text='Нет❌', callback_data='no_accept'),
+        ]
     ],
     resize_keyboard=True,
 )

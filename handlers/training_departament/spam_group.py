@@ -13,12 +13,14 @@ from states import Spam
 
 @dp.callback_query_handler(text='spam_teacher')
 async def spam(call: types.CallbackQuery):
-    await call.message.answer('Пришлите сообщение:', reply_markup=cancel_spam_ikb)
+    await call.message.answer(
+        'Пришлите сообщение:', reply_markup=cancel_spam_ikb
+    )
     await Spam.message.set()
 
 
 @dp.callback_query_handler(text='spam_group')
-async def spam(call: types.CallbackQuery):
+async def spam_group(call: types.CallbackQuery):
     await call.message.answer('Напишите группу:', reply_markup=cancel_spam_ikb)
     await Spam.group.set()
 
@@ -30,12 +32,16 @@ async def get_group(message: types.Message, state: FSMContext):
     check = await take_all_group(user_msg)
     if not check:
         await state.update_data(group=user_msg)
-        await message.answer('Введите сообщение для рассылки', reply_markup=cancel_spam_ikb)
+        await message.answer(
+            'Введите сообщение для рассылки', reply_markup=cancel_spam_ikb
+        )
         await Spam.message.set()
     else:
         check = '\n'.join(check)
-        await message.answer(f'Такой группы нет\nВот список похожих групп\n'
-                             f'{check}', reply_markup=cancel_spam_ikb)
+        await message.answer(
+            f'Такой группы нет\nВот список похожих групп\n' f'{check}',
+            reply_markup=cancel_spam_ikb,
+        )
 
 
 @dp.message_handler(content_types=['text'], state=Spam.message)
@@ -49,13 +55,17 @@ async def spam_text(message: types.Message, state: FSMContext):
         teachers = db.query(Teacher).all()
         user_ids = list(map(lambda x: x.tg_user_id, teachers))
     for user_id in user_ids:
-        await bot.send_message(chat_id=user_id, text=f'Рассылка\n\nСообщение\n{message.text}')
+        await bot.send_message(
+            chat_id=user_id, text=f'Рассылка\n\nСообщение\n{message.text}'
+        )
     await message.answer('Рассылка отправлена')
     await state.finish()
 
 
 @dp.message_handler(content_types=['photo'], state=Spam.message)
-async def spam_photo(message: types.Message, state: FSMContext, album: List[types.Message]):
+async def spam_photo(
+    message: types.Message, state: FSMContext, album: List[types.Message]
+):
     try:
         data = await state.get_data('group')
         group = data['group']
@@ -79,7 +89,9 @@ async def spam_photo(message: types.Message, state: FSMContext, album: List[type
 
 
 @dp.message_handler(content_types=['document'], state=Spam.message)
-async def spam_photo(message: types.Message, state: FSMContext, album: List[types.Message]):
+async def spam_document(
+    message: types.Message, state: FSMContext, album: List[types.Message]
+):
     try:
         data = await state.get_data('group')
         group = data['group']
@@ -92,7 +104,9 @@ async def spam_photo(message: types.Message, state: FSMContext, album: List[type
     album_document = MediaGroup()
     for i in range(len(album)):
         if i == 0:
-            album_document.attach_document(album[i].document.file_id, caption=text)
+            album_document.attach_document(
+                album[i].document.file_id, caption=text
+            )
         else:
             album_document.attach_document(album[i].document.file_id)
     for user_id in user_ids:

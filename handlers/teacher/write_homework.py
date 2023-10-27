@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from keyboards.inlines import (
     cancel_homework_ikb,
     create_groups_ikb,
-    create_lessons_ikb
+    create_lessons_ikb,
 )
 from loader import dp
 from scripts import get_lesson_dict, update_homework

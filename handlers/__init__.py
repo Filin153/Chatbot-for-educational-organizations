@@ -1,4 +1,5 @@
 from .start import dp
+from .admins import dp
 from .homeworks import dp
 from .send_schedule import dp
 from .student import dp

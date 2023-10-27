@@ -10,8 +10,7 @@ class TrainingDepartamentData(Base):
     id = sqlalchemy.Column(
         sqlalchemy.Integer, primary_key=True, autoincrement=True
     )
-    password = sqlalchemy.Column(sqlalchemy.String, unique=True)
-    full_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    password = sqlalchemy.Column(sqlalchemy.String)
     made_date = sqlalchemy.Column(
         sqlalchemy.DATE, default=datetime.datetime.now()
     )

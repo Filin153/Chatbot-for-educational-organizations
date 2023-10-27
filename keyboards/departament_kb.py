@@ -7,7 +7,10 @@ departament_kb = ReplyKeyboardMarkup(
             KeyboardButton(text='Документы'),
         ],
         [KeyboardButton(text='Рассылка')],
-        [KeyboardButton(text='Домашнее задание'), KeyboardButton(text='Расписание')],
+        [
+            KeyboardButton(text='Домашнее задание'),
+            KeyboardButton(text='Расписание'),
+        ],
     ],
     resize_keyboard=True,
 )

@@ -1,16 +1,15 @@
-import asyncio
+from aiogram import filters, types
 
-from aiogram import types, filters
 from keyboards import where_butt
-from loader import bot, dp
+from loader import dp
 from scripts import msg_text
 from scripts.help_to_handler import edit_or_answer, send_info
 
 
-@dp.message_handler(filters.Text(equals="Инфо"))
+@dp.message_handler(filters.Text(equals='Инфо'))
 async def info(message: types.Message):
     await message.delete()
-    await edit_or_answer(message, "Выберете:", where_butt)
+    await edit_or_answer(message, 'Выберете:', where_butt)
 
 
 @dp.callback_query_handler(text='priem_d')
@@ -19,17 +18,17 @@ async def med(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(text='priem_kam')
-async def med(call: types.CallbackQuery):
+async def kam(call: types.CallbackQuery):
     await send_info(call, msg_text.PRIEM_KAM)
 
 
 @dp.callback_query_handler(text='tualet')
-async def med(call: types.CallbackQuery):
+async def tualet(call: types.CallbackQuery):
     await send_info(call, msg_text.TUELET)
 
 
 @dp.callback_query_handler(text='med')
-async def med(call: types.CallbackQuery):
+async def med_punkt(call: types.CallbackQuery):
     await send_info(call, msg_text.MED)
 
 

@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from keyboards import start_kb
 from keyboards.inlines import cancel_ikb
 from loader import db, dp
-from models import Student, Teacher, TrainingDepartament
+from models import Student, Teacher
 from scripts import take_group
 from states import Register
 
@@ -38,8 +38,10 @@ async def get_group(message: types.Message, state: FSMContext):
             f'Привет {student.user_name},'
             f' Ты успешно вошёл в систему, теперь ты можешь просматривать'
             f' своё расписание, заданные домашние работы, '
-            f' и интересующую тебе информацию о колледже.\n(Теперь вы можете войти'
-            f' в учебный отдел)', reply_markup=start_kb
+            f' и интересующую тебе информацию о колледже.'
+            f'\n(Теперь вы можете войти'
+            f' в учебный отдел)',
+            reply_markup=start_kb,
         )
         await state.finish()
     else:

@@ -120,20 +120,20 @@ class RKSIScheduleParser(BaseScheduleParser):
                 return r.status // 100 == 2
 
     async def parse_group_themes(
-            self, group_name: str
+        self, group_name: str
     ) -> list[RawSubjectEntry]:
         async with ClientSession() as session:
             headers = {
                 'Accept': 'text/html,application/xhtml+xml,'
-                          'application/xml;q=0.9,*/*;q=0.8',
+                'application/xml;q=0.9,*/*;q=0.8',
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Origin': 'https://rksi.ru',
                 # 'Content-Length': '50',
                 'Accept-Language': 'ru',
                 'User-Agent': 'Mozilla/5.0 '
-                              '(Macintosh; Intel Mac OS X 10_15_7) '
-                              'AppleWebKit/605.1.15 (KHTML, like Gecko) '
-                              'Version/15.4 Safari/605.1.15',
+                '(Macintosh; Intel Mac OS X 10_15_7) '
+                'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+                'Version/15.4 Safari/605.1.15',
                 'Referer': 'https://rksi.ru/mobile_schedule',
                 # 'Accept-Encoding': 'gzip, deflate, br',
                 'Connection': 'keep-alive',
@@ -159,20 +159,20 @@ class RKSIScheduleParser(BaseScheduleParser):
         return themes
 
     async def parse_prepod_themes(
-            self, prepod_name: str
+        self, prepod_name: str
     ) -> list[RawSubjectEntry]:
         async with ClientSession() as session:
             headers = {
                 'Accept': 'text/html,application/xhtml+xml,'
-                          'application/xml;q=0.9,*/*;q=0.8',
+                'application/xml;q=0.9,*/*;q=0.8',
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Origin': 'https://rksi.ru',
                 # 'Content-Length': '50',
                 'Accept-Language': 'ru',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; '
-                              'Intel Mac OS X 10_15_7) '
-                              'AppleWebKit/605.1.15 (KHTML, like Gecko) '
-                              'Version/15.4 Safari/605.1.15',
+                'Intel Mac OS X 10_15_7) '
+                'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+                'Version/15.4 Safari/605.1.15',
                 'Referer': 'https://rksi.ru/mobile_schedule',
                 # 'Accept-Encoding': 'gzip, deflate, br',
                 'Connection': 'keep-alive',

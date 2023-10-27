@@ -6,7 +6,7 @@ from take_schedule_from_RKSI.main import prepod_pars
 
 
 async def help_write(
-        name: str, today: bool = False, tomorrow: bool = False
+    name: str, today: bool = False, tomorrow: bool = False
 ) -> dict:  # Если всё False то выводит за неделю
     newdict = {}
     result = await prepod_pars(name, today=today, tomorrow=tomorrow)

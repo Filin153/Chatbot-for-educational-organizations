@@ -11,7 +11,7 @@ from scripts.help_to_handler import (
     edit_or_answer,
     take,
     take_g_or_p,
-    valid_data
+    valid_data,
 )
 from take_schedule_from_RKSI.make_schedule import MakeSchedule
 

@@ -15,7 +15,13 @@ async def check_homework_student(call: types.CallbackQuery):
         .group
     )
     subject = call.data.split('_')[1]
-    all_date = db.query(Homework).filter(Homework.group == student_group, Homework.name_lesson == subject).all()
+    all_date = (
+        db.query(Homework)
+        .filter(
+            Homework.group == student_group, Homework.name_lesson == subject
+        )
+        .all()
+    )
     dates = list(map(lambda x: str(x.made_date), set(all_date)))
     dates_ikb = await create_date_ikb(set(dates), subject)
     await call.message.edit_text('Выберите дату')
@@ -23,7 +29,7 @@ async def check_homework_student(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda call: call.data.startswith('date_'))
-async def check_homework_student(call: types.CallbackQuery):
+async def check_date_student(call: types.CallbackQuery):
     student_group = (
         db.query(Student)
         .filter(Student.tg_user_id == call.from_user.id)
@@ -35,7 +41,9 @@ async def check_homework_student(call: types.CallbackQuery):
     homework = (
         db.query(Homework)
         .filter(
-            Homework.group == student_group, Homework.name_lesson == subject, Homework.made_date == date
+            Homework.group == student_group,
+            Homework.name_lesson == subject,
+            Homework.made_date == date,
         )
         .all()[-1]
     )

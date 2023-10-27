@@ -40,7 +40,8 @@ async def get_fio(message: types.Message, state: FSMContext):
             f' Вы успешно вошли, теперь вы можете смотреть расписание,'
             f' записывать домашнее задание для группы,'
             f' получить интересующую вас информацию о колледже.\n(Теперь вы '
-            f'можете войти в учебный отдел)', reply_markup=start_kb
+            f'можете войти в учебный отдел)',
+            reply_markup=start_kb,
         )
         await state.finish()
     else:

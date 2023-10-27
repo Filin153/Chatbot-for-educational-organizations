@@ -23,4 +23,8 @@ async def homework_start(message: types.Message):
         )
         subjects = list(map(lambda x: x.name_lesson, all_homeworks))
         subjects_ikb = await create_subjects_ikb(set(subjects))
-        await message.answer('Выберите предмет', reply_markup=subjects_ikb)
+        await message.answer(
+            'Выберите предмет\n'
+            '(Для студентов - если нет inline кнопок нет дз)',
+            reply_markup=subjects_ikb,
+        )

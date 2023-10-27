@@ -11,4 +11,6 @@ class Admin(Base):
         sqlalchemy.Integer, primary_key=True, autoincrement=True
     )
     full_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    tg_user_id = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=False)
+    tg_user_id = sqlalchemy.Column(
+        sqlalchemy.Integer, unique=True, nullable=False
+    )

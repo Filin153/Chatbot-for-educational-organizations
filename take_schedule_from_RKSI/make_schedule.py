@@ -36,7 +36,7 @@ class MakeSchedule:
     }
 
     def __init__(
-            self, group: str = None, today: bool = False, tomorow: bool = False
+        self, group: str = None, today: bool = False, tomorow: bool = False
     ):
         self.doc = ScheduleModel()
         self.doc.group = group
@@ -48,7 +48,7 @@ class MakeSchedule:
         split_symbol = self.SPLIT_SYMBOL
         all_day = msg.split(split_symbol)
         yield split_symbol.join(all_day[: int(len(all_day) / 2)])
-        yield split_symbol.join(all_day[int(len(all_day) / 2):])
+        yield split_symbol.join(all_day[int(len(all_day) / 2)])
 
     def check_for_prepod(self):
         if len(self.doc.group.split('.')) > 1:
@@ -93,8 +93,8 @@ class MakeSchedule:
 
             self.doc.schedule = ''.join(msg_data)
         elif (date.today().strftime('%d.%m.20%y') == r_j[0]['date']) or (
-                ((date.today() + timedelta(days=1)).strftime('%d.%m.20%y'))
-                == r_j[0]['date']
+            ((date.today() + timedelta(days=1)).strftime('%d.%m.20%y'))
+            == r_j[0]['date']
         ):
             msg_data = []
             msg_data.append(f"🗓Расписание на {str(r_j[0]['date'])}\n")
