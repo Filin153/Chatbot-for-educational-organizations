@@ -5,7 +5,7 @@ from keyboards import start_kb
 from keyboards.inlines import cancel_ikb
 from loader import db, dp
 from models import Student, Teacher
-from scripts import take_all_group
+from scripts import take_all_group, remove_smile
 from states import Register
 
 
@@ -32,12 +32,12 @@ async def get_group(message: types.Message, state: FSMContext):
     if not res:
         student = Student()
         student.tg_user_id = message.from_user.id
-        student.user_name = message.from_user.full_name
+        student.user_name = remove_smile(message.from_user.full_name)
         student.group = group
         db.add(student)
         db.commit()
         await message.answer(
-            f'Привет {student.user_name},'
+            f'Привет {message.from_user.full_name},'
             f' Ты успешно вошёл в систему, теперь ты можешь просматривать'
             f' своё расписание, заданные домашние работы, '
             f' и интересующую тебе информацию о колледже.'

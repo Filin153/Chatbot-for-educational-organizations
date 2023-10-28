@@ -5,6 +5,7 @@ from keyboards.inlines import cancel_ikb
 from keyboards import start_kb
 from loader import db, dp
 from models import Student, Teacher, TeacherData
+from scripts import remove_smile
 from states import Register
 
 
@@ -33,7 +34,7 @@ async def get_fio(message: types.Message, state: FSMContext):
         teacher = Teacher()
         teacher.tg_user_id = message.from_user.id
         teacher.user_name = message.from_user.full_name
-        teacher.full_name = teacher_data.full_name
+        teacher.full_name = remove_smile(teacher_data.full_name)
         db.add(teacher)
         db.commit()
         await message.answer(
