@@ -32,7 +32,7 @@ async def get_group(message: types.Message, state: FSMContext):
     if not res:
         student = Student()
         student.tg_user_id = message.from_user.id
-        student.user_name = remove_smile(message.from_user.full_name)
+        student.user_name = await remove_smile(message.from_user.full_name)
         student.group = group
         db.add(student)
         db.commit()
