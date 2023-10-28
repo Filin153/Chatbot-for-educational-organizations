@@ -12,5 +12,5 @@ class Admin(Base):
     )
     full_name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     tg_user_id = sqlalchemy.Column(
-        sqlalchemy.Integer, unique=True, nullable=False
+        sqlalchemy.BigInteger, unique=True, nullable=False
     )

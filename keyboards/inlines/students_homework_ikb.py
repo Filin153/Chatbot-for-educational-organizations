@@ -6,7 +6,7 @@ async def create_subjects_ikb(subjects):
     for subject in subjects:
         subjects_ikb.add(
             InlineKeyboardButton(
-                text=subject, callback_data=f'subject_{subject}'
+                text=subject, callback_data=f'st_{subject}'
             )
         )
     return subjects_ikb
@@ -17,7 +17,7 @@ async def create_date_ikb(dates, subject):
     for date in dates:
         date_ikb.add(
             InlineKeyboardButton(
-                text=date, callback_data=f'date_{date}_{subject}'
+                text=date, callback_data=f'_{date}_{subject}'
             )
         )
     return date_ikb

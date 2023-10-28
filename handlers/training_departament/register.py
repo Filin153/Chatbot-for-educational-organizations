@@ -51,7 +51,7 @@ async def get_fio(message: types.Message, state: FSMContext):
                 .filter(Teacher.tg_user_id == message.from_user.id)
                 .first()
             )
-        account.is_departament = 1
+        account.is_departament = True
         db.commit()
         await message.answer(
             'Вам доступен новый функционал', reply_markup=departament_kb

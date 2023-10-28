@@ -39,14 +39,14 @@ async def reset_password(call: types.CallbackQuery):
 @dp.message_handler(content_types=['text'], state=ResetDepartament.password)
 async def res_password(message: types.Message, state: FSMContext):
     students_in_departaments = (
-        db.query(Student).filter(Student.is_departament == 1).all()
+        db.query(Student).filter(Student.is_departament == True).all()
     )
     teachers_in_departaments = (
-        db.query(Teacher).filter(Teacher.is_departament == 1).all()
+        db.query(Teacher).filter(Teacher.is_departament == True).all()
     )
     for i in students_in_departaments:
         user_id = i.tg_user_id
-        i.is_departament = 0
+        i.is_departament = False
         try:
             await bot.send_message(
                 chat_id=user_id,
@@ -57,7 +57,7 @@ async def res_password(message: types.Message, state: FSMContext):
             pass
     for i in teachers_in_departaments:
         user_id = i.tg_user_id
-        i.is_departament = 0
+        i.is_departament = False
         try:
             await bot.send_message(
                 chat_id=user_id,

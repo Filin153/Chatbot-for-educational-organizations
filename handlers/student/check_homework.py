@@ -6,7 +6,7 @@ from loader import db, dp
 from models import Homework, Student
 
 
-@dp.callback_query_handler(lambda call: call.data.startswith('subject_'))
+@dp.callback_query_handler(lambda call: call.data.startswith('st_'))
 async def check_homework_student(call: types.CallbackQuery):
     student_group = (
         db.query(Student)
@@ -28,7 +28,7 @@ async def check_homework_student(call: types.CallbackQuery):
     await call.message.edit_reply_markup(dates_ikb)
 
 
-@dp.callback_query_handler(lambda call: call.data.startswith('date_'))
+@dp.callback_query_handler(lambda call: call.data.startswith('_'))
 async def check_date_student(call: types.CallbackQuery):
     student_group = (
         db.query(Student)
